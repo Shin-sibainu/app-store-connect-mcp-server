@@ -1,0 +1,33 @@
+# Source files
+src/
+
+# Config files
+tsconfig.json
+.gitignore
+
+# Development files
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Reports (local only)
+reports/
+
+# Private keys (should never be published!)
+*.p8
+AuthKey_*.p8
+
+# Environment files
+.env
+.env.*
+
+# Node modules (npm handles this automatically)
+node_modules/
+
