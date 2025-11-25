@@ -38,11 +38,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shincode-project/app-store-connect-mcp-server.git"
+    "url": "https://github.com/Shin-sibainu/app-store-connect-mcp-server.git"
   },
-  "homepage": "https://github.com/shincode-project/app-store-connect-mcp-server#readme",
+  "homepage": "https://github.com/Shin-sibainu/app-store-connect-mcp-server#readme",
   "bugs": {
-    "url": "https://github.com/shincode-project/app-store-connect-mcp-server/issues"
+    "url": "https://github.com/Shin-sibainu/app-store-connect-mcp-server/issues"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.0",

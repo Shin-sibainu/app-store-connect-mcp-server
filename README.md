@@ -146,7 +146,7 @@ Once configured, you can ask:
 
 ```bash
 # Clone the repository
-git clone https://github.com/shincode-project/app-store-connect-mcp-server.git
+git clone https://github.com/Shin-sibainu/app-store-connect-mcp-server.git
 cd app-store-connect-mcp-server
 
 # Install dependencies
