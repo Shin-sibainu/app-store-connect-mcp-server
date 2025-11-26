@@ -1,6 +1,6 @@
 {
   "name": "@shincode/app-store-connect-mcp-server",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "MCP Server for App Store Connect API - Analyze your iOS/macOS app performance, sales, reviews, and more",
   "main": "dist/index.js",
   "type": "module",
