@@ -1,10 +1,13 @@
-import { AppStoreConnectAuth } from './auth.js';
-import { ApiResponse, ApiError } from './types.js';
+import { AppStoreConnectAuth } from "./auth.js";
+import { ApiResponse, ApiError } from "./types.js";
 
-const BASE_URL = 'https://api.appstoreconnect.apple.com/v1';
-const ANALYTICS_URL = 'https://api.appstoreconnect.apple.com/v1/analyticsReportRequests';
-const SALES_REPORTS_URL = 'https://api.appstoreconnect.apple.com/v1/salesReports';
-const FINANCE_REPORTS_URL = 'https://api.appstoreconnect.apple.com/v1/financeReports';
+const BASE_URL = "https://api.appstoreconnect.apple.com/v1";
+const ANALYTICS_URL =
+  "https://api.appstoreconnect.apple.com/v1/analyticsReportRequests";
+const SALES_REPORTS_URL =
+  "https://api.appstoreconnect.apple.com/v1/salesReports";
+const FINANCE_REPORTS_URL =
+  "https://api.appstoreconnect.apple.com/v1/financeReports";
 
 export class AppStoreConnectClient {
   private auth: AppStoreConnectAuth;
@@ -16,7 +19,10 @@ export class AppStoreConnectClient {
   /**
    * Make a GET request to the App Store Connect API
    */
-  async get<T>(endpoint: string, params?: Record<string, string>): Promise<ApiResponse<T>> {
+  async get<T>(
+    endpoint: string,
+    params?: Record<string, string>
+  ): Promise<ApiResponse<T>> {
     const url = new URL(`${BASE_URL}${endpoint}`);
     if (params) {
       Object.entries(params).forEach(([key, value]) => {
@@ -25,13 +31,15 @@ export class AppStoreConnectClient {
     }
 
     const response = await fetch(url.toString(), {
-      method: 'GET',
+      method: "GET",
       headers: this.auth.getAuthHeaders(),
     });
 
     if (!response.ok) {
-      const error = await response.json() as ApiError;
-      throw new Error(`API Error: ${error.errors?.[0]?.detail || response.statusText}`);
+      const error = (await response.json()) as ApiError;
+      throw new Error(
+        `API Error: ${error.errors?.[0]?.detail || response.statusText}`
+      );
     }
 
     return response.json() as Promise<ApiResponse<T>>;
@@ -42,14 +50,16 @@ export class AppStoreConnectClient {
    */
   async post<T>(endpoint: string, body: unknown): Promise<ApiResponse<T>> {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'POST',
+      method: "POST",
       headers: this.auth.getAuthHeaders(),
       body: JSON.stringify(body),
     });
 
     if (!response.ok) {
-      const error = await response.json() as ApiError;
-      throw new Error(`API Error: ${error.errors?.[0]?.detail || response.statusText}`);
+      const error = (await response.json()) as ApiError;
+      throw new Error(
+        `API Error: ${error.errors?.[0]?.detail || response.statusText}`
+      );
     }
 
     return response.json() as Promise<ApiResponse<T>>;
@@ -60,14 +70,16 @@ export class AppStoreConnectClient {
    */
   async patch<T>(endpoint: string, body: unknown): Promise<ApiResponse<T>> {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: this.auth.getAuthHeaders(),
       body: JSON.stringify(body),
     });
 
     if (!response.ok) {
-      const error = await response.json() as ApiError;
-      throw new Error(`API Error: ${error.errors?.[0]?.detail || response.statusText}`);
+      const error = (await response.json()) as ApiError;
+      throw new Error(
+        `API Error: ${error.errors?.[0]?.detail || response.statusText}`
+      );
     }
 
     return response.json() as Promise<ApiResponse<T>>;
@@ -78,13 +90,15 @@ export class AppStoreConnectClient {
    */
   async delete(endpoint: string): Promise<void> {
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: this.auth.getAuthHeaders(),
     });
 
     if (!response.ok) {
-      const error = await response.json() as ApiError;
-      throw new Error(`API Error: ${error.errors?.[0]?.detail || response.statusText}`);
+      const error = (await response.json()) as ApiError;
+      throw new Error(
+        `API Error: ${error.errors?.[0]?.detail || response.statusText}`
+      );
     }
   }
 
@@ -100,39 +114,43 @@ export class AppStoreConnectClient {
     version?: string;
   }): Promise<string> {
     const url = new URL(SALES_REPORTS_URL);
-    url.searchParams.append('filter[frequency]', params.frequency);
-    url.searchParams.append('filter[reportDate]', params.reportDate);
-    url.searchParams.append('filter[reportSubType]', params.reportSubType);
-    url.searchParams.append('filter[reportType]', params.reportType);
-    url.searchParams.append('filter[vendorNumber]', params.vendorNumber);
+    url.searchParams.append("filter[frequency]", params.frequency);
+    url.searchParams.append("filter[reportDate]", params.reportDate);
+    url.searchParams.append("filter[reportSubType]", params.reportSubType);
+    url.searchParams.append("filter[reportType]", params.reportType);
+    url.searchParams.append("filter[vendorNumber]", params.vendorNumber);
     if (params.version) {
-      url.searchParams.append('filter[version]', params.version);
+      url.searchParams.append("filter[version]", params.version);
     }
 
     const response = await fetch(url.toString(), {
-      method: 'GET',
+      method: "GET",
       headers: {
         ...this.auth.getAuthHeaders(),
-        'Accept-Encoding': 'gzip',
+        "Accept-Encoding": "gzip",
       },
     });
 
     if (!response.ok) {
       if (response.status === 404) {
-        throw new Error('No report available for the specified date. Reports may take up to 24 hours to be available.');
+        throw new Error(
+          "No report available for the specified date. Reports may take up to 24 hours to be available."
+        );
       }
-      const error = await response.json() as ApiError;
-      throw new Error(`API Error: ${error.errors?.[0]?.detail || response.statusText}`);
+      const error = (await response.json()) as ApiError;
+      throw new Error(
+        `API Error: ${error.errors?.[0]?.detail || response.statusText}`
+      );
     }
 
     // The response is gzip compressed TSV data
     const buffer = await response.arrayBuffer();
-    
+
     // Decompress gzip
-    const { gunzipSync } = await import('zlib');
+    const { gunzipSync } = await import("zlib");
     const decompressed = gunzipSync(Buffer.from(buffer));
-    
-    return decompressed.toString('utf-8');
+
+    return decompressed.toString("utf-8");
   }
 
   /**
@@ -145,44 +163,51 @@ export class AppStoreConnectClient {
     vendorNumber: string;
   }): Promise<string> {
     const url = new URL(FINANCE_REPORTS_URL);
-    url.searchParams.append('filter[regionCode]', params.regionCode);
-    url.searchParams.append('filter[reportDate]', params.reportDate);
-    url.searchParams.append('filter[reportType]', params.reportType);
-    url.searchParams.append('filter[vendorNumber]', params.vendorNumber);
+    url.searchParams.append("filter[regionCode]", params.regionCode);
+    url.searchParams.append("filter[reportDate]", params.reportDate);
+    url.searchParams.append("filter[reportType]", params.reportType);
+    url.searchParams.append("filter[vendorNumber]", params.vendorNumber);
 
     const response = await fetch(url.toString(), {
-      method: 'GET',
+      method: "GET",
       headers: {
         ...this.auth.getAuthHeaders(),
-        'Accept-Encoding': 'gzip',
+        "Accept-Encoding": "gzip",
       },
     });
 
     if (!response.ok) {
       if (response.status === 404) {
-        throw new Error('No finance report available for the specified date and region.');
+        throw new Error(
+          "No finance report available for the specified date and region."
+        );
       }
-      const error = await response.json() as ApiError;
-      throw new Error(`API Error: ${error.errors?.[0]?.detail || response.statusText}`);
+      const error = (await response.json()) as ApiError;
+      throw new Error(
+        `API Error: ${error.errors?.[0]?.detail || response.statusText}`
+      );
     }
 
     // The response is gzip compressed TSV data
     const buffer = await response.arrayBuffer();
-    
+
     // Decompress gzip
-    const { gunzipSync } = await import('zlib');
+    const { gunzipSync } = await import("zlib");
     const decompressed = gunzipSync(Buffer.from(buffer));
-    
-    return decompressed.toString('utf-8');
+
+    return decompressed.toString("utf-8");
   }
 
   /**
    * Paginate through all results
    */
-  async getAll<T>(endpoint: string, params?: Record<string, string>): Promise<T[]> {
+  async getAll<T>(
+    endpoint: string,
+    params?: Record<string, string>
+  ): Promise<T[]> {
     const results: T[] = [];
     let nextUrl: string | undefined = undefined;
-    
+
     // First request
     const firstResponse = await this.get<T[]>(endpoint, params);
     if (Array.isArray(firstResponse.data)) {
@@ -193,7 +218,7 @@ export class AppStoreConnectClient {
     // Paginate
     while (nextUrl) {
       const response = await fetch(nextUrl, {
-        method: 'GET',
+        method: "GET",
         headers: this.auth.getAuthHeaders(),
       });
 
@@ -201,7 +226,7 @@ export class AppStoreConnectClient {
         break;
       }
 
-      const data = await response.json() as ApiResponse<T[]>;
+      const data = (await response.json()) as ApiResponse<T[]>;
       if (Array.isArray(data.data)) {
         results.push(...data.data);
       }
@@ -215,29 +240,48 @@ export class AppStoreConnectClient {
    * Download analytics report segment
    */
   async downloadAnalyticsSegment(url: string): Promise<string> {
-    const response = await fetch(url, {
-      method: 'GET',
-      headers: {
-        ...this.auth.getAuthHeaders(),
-        'Accept-Encoding': 'gzip',
-      },
-    });
+    // S3の署名付きURLの場合は認証ヘッダーを送らない（URLに署名が含まれているため）
+    const isS3Url = url.includes("s3.") || url.includes("amazonaws.com");
 
-    if (!response.ok) {
-      throw new Error(`Failed to download analytics segment: ${response.statusText}`);
-    }
-
-    const buffer = await response.arrayBuffer();
-    
-    // Try to decompress if gzipped
     try {
-      const { gunzipSync } = await import('zlib');
-      const decompressed = gunzipSync(Buffer.from(buffer));
-      return decompressed.toString('utf-8');
-    } catch {
-      // Not gzipped, return as-is
-      return new TextDecoder().decode(buffer);
+      const response = await fetch(url, {
+        method: "GET",
+        // S3の署名付きURLは追加のヘッダー不要（URLパラメータにすべて含まれている）
+        headers: isS3Url
+          ? {}
+          : {
+              ...this.auth.getAuthHeaders(),
+              "Accept-Encoding": "gzip",
+            },
+      });
+
+      if (!response.ok) {
+        const errorText = await response
+          .text()
+          .catch(() => response.statusText);
+        throw new Error(
+          `Failed to download analytics segment: ${response.status} ${
+            response.statusText
+          } - ${errorText.substring(0, 200)}`
+        );
+      }
+
+      const buffer = await response.arrayBuffer();
+
+      // Try to decompress if gzipped
+      try {
+        const { gunzipSync } = await import("zlib");
+        const decompressed = gunzipSync(Buffer.from(buffer));
+        return decompressed.toString("utf-8");
+      } catch (decompressError) {
+        // Not gzipped, return as-is
+        return new TextDecoder().decode(buffer);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw error;
+      }
+      throw new Error(`Failed to download analytics segment: ${String(error)}`);
     }
   }
 }
-
